@@ -42,10 +42,13 @@ async def purge_requests(bot, message):
     except:
         return await message.reply_text("Give me a user ID along with it. For example: /purge_req 11XXXXXX")
     user = await Fsub_DB().get_user(int(cmd))
-    await Fsub_DB().delete_user(int(cmd))
-    return await message.reply_text(
-        f"Successfully deleted {user['first_name']} from DB."
-    )
+    if user:
+        await Fsub_DB().delete_user(int(cmd))
+        return await message.reply_text(
+            f"Successfully deleted {user['first_name']} from DB."
+        )
+    else:
+        return await message.reply_text("User not found !")
 
 @Client.on_message(filters.command("get_req") & filters.private & filters.user(ADMINS))
 async def get_request(bot, message):
@@ -54,6 +57,8 @@ async def get_request(bot, message):
     except:
         return await message.reply_text("Give me a user ID along with it. For example: /get_req 11XXXXXX")
     user = await Fsub_DB().get_user(int(cmd))
+    if not user:
+        return await message.reply_text("User Not Found !")
     txt = f"""USER DETAILS:
     ID: {user['id']}
     First Name: {user['first_name']}

@@ -5,6 +5,7 @@ from pyrogram import filters, enums
 from info import AUTH_CHANNEL, LONG_IMDB_DESCRIPTION, MAX_LIST_ELM, SHORT_URL, SHORT_API
 from imdb import Cinemagoer
 from typing import Union, List
+from database.fsub_db import Fsub_DB
 from datetime import datetime, timedelta
 from database.users_chats_db import db
 from bs4 import BeautifulSoup
@@ -34,6 +35,15 @@ class temp(object):
     GP_SPELL = {}
 
 async def is_subscribed(bot, query):
+    if not AUTH_CHANNEL:
+        return True
+    else:
+        pass
+    user = await Fsub_DB().get_user(int(query.from_user.id))
+    if user:
+        return True
+    else:
+        pass
     try:
         user = await bot.get_chat_member(AUTH_CHANNEL, query.from_user.id)
     except UserNotParticipant:
